@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VisualSpacious — Matterport & Drone Property Photography</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F7F5F0;
+    --white: #FFFFFF;
+    --stone: #E8E4DC;
+    --ink: #1A1916;
+    --ink-muted: #6B6760;
+    --ink-faint: #A8A49E;
+    --accent: #2A5C45;
+    --accent-light: #EAF2ED;
+    --accent-mid: #4A8C6A;
+    --gold: #C4973A;
+    --border: rgba(26,25,22,0.10);
+    --border-strong: rgba(26,25,22,0.18);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    height: 68px;
+    background: rgba(247,245,240,0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.35rem;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+
+  .nav-logo span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--ink-muted);
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--ink); }
+
+  .nav-cta {
+    background: var(--accent) !important;
+    color: var(--white) !important;
+    padding: 0.5rem 1.25rem;
+    border-radius: 6px;
+    font-weight: 500 !important;
+    transition: background 0.2s !important;
+  }
+
+  .nav-cta:hover { background: #1e4433 !important; color: var(--white) !important; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 68px;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6rem 5% 6rem 8%;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .hero-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.8rem, 4.5vw, 4.2rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--ink-muted);
+    max-width: 420px;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--white);
+    text-decoration: none;
+    padding: 0.875rem 2rem;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+
+  .btn-primary:hover { background: #1e4433; transform: translateY(-1px); }
+
+  .btn-ghost {
+    text-decoration: none;
+    color: var(--ink-muted);
+    font-size: 0.9375rem;
+    font-weight: 400;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+  }
+
+  .btn-ghost:hover { color: var(--ink); }
+  .btn-ghost::after { content: '→'; }
+
+  .hero-right {
+    position: relative;
+    overflow: hidden;
+    background: var(--stone);
+  }
+
+  .hero-right .photo-grid {
+    display: grid;
+    grid-template-rows: 55% 45%;
+    height: 100%;
+    gap: 3px;
+  }
+
+  .hero-right .photo-grid .top {
+    background:
+      linear-gradient(to bottom, rgba(26,25,22,0.15) 0%, rgba(26,25,22,0.0) 40%),
+      url('https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=900&q=80') center/cover;
+  }
+
+  .hero-right .photo-grid .bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+  }
+
+  .hero-right .photo-grid .bottom .b1 {
+    background: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80') center/cover;
+  }
+
+  .hero-right .photo-grid .bottom .b2 {
+    background: url('https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&q=80') center/cover;
+  }
+
+  .hero-badge {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    background: rgba(247,245,240,0.92);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.875rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-badge .badge-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--accent-light);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-badge .badge-icon svg { width: 18px; height: 18px; }
+
+  .hero-badge .badge-text p { font-size: 0.75rem; color: var(--ink-muted); }
+  .hero-badge .badge-text strong { font-size: 0.9375rem; font-weight: 500; color: var(--ink); }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    background: var(--ink);
+    padding: 2.5rem 8%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+    border-right: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .stat:last-child { border-right: none; }
+
+  .stat-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.5rem;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 0.35rem;
+  }
+
+  .stat-num span { color: var(--accent-mid); }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* ── SECTION COMMON ── */
+  section { padding: 7rem 8%; }
+
+  .section-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.875rem;
+    display: block;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 3vw, 2.75rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 1rem;
+  }
+
+  .section-sub {
+    font-size: 1rem;
+    color: var(--ink-muted);
+    max-width: 520px;
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  /* ── SERVICES ── */
+  #services { background: var(--white); }
+
+  .services-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 4rem;
+    gap: 2rem;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+    background: var(--border);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .service-card {
+    background: var(--white);
+    padding: 2.5rem 2rem;
+    transition: background 0.2s;
+  }
+
+  .service-card:hover { background: var(--cream); }
+
+  .service-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--accent-light);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .service-icon svg { width: 24px; height: 24px; color: var(--accent); }
+
+  .service-card h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: var(--ink);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+  }
+
+  .service-card p {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    line-height: 1.7;
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+  }
+
+  .service-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .service-features li {
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .service-features li::before {
+    content: '';
+    display: block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .service-tag {
+    display: inline-block;
+    margin-top: 1.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--accent);
+    border-radius: 100px;
+  }
+
+  /* ── HOW IT WORKS ── */
+  #process { background: var(--cream); }
+
+  .process-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .process-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .process-step {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 1.25rem;
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+
+  .process-step:last-child { border-bottom: none; }
+
+  .step-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: var(--ink-faint);
+    padding-top: 2px;
+  }
+
+  .step-content h4 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+
+  .step-content p {
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  .process-visual {
+    position: sticky;
+    top: 100px;
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    background: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80') center/cover;
+  }
+
+  .process-visual-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(42,92,69,0.15) 0%, transparent 60%);
+  }
+
+  /* ── PORTFOLIO ── */
+  #portfolio { background: var(--white); }
+
+  .portfolio-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3rem;
+  }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 260px 260px;
+    gap: 12px;
+  }
+
+  .portfolio-grid .item {
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    background: var(--stone);
+    cursor: pointer;
+  }
+
+  .portfolio-grid .item:first-child {
+    grid-column: 1 / 3;
+  }
+
+  .portfolio-grid .item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .portfolio-grid .item:hover img { transform: scale(1.03); }
+
+  .item-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(26,25,22,0.5) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    display: flex;
+    align-items: flex-end;
+    padding: 1.25rem;
+  }
+
+  .portfolio-grid .item:hover .item-overlay { opacity: 1; }
+
+  .item-overlay span {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--white);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ── PRICING ── */
+  #pricing { background: var(--cream); }
+
+  .pricing-header { margin-bottom: 4rem; }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .pricing-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .pricing-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 4px 24px rgba(42,92,69,0.1);
+  }
+
+  .pricing-card.featured {
+    border: 2px solid var(--accent);
+    position: relative;
+  }
+
+  .featured-badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: var(--white);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.875rem;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+
+  .pricing-tier {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+
+  .pricing-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .pricing-desc {
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .pricing-price {
+    margin-bottom: 0.25rem;
+  }
+
+  .pricing-price .amount {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.5rem;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .pricing-price .currency {
+    font-size: 1.25rem;
+    color: var(--ink-muted);
+    vertical-align: top;
+    line-height: 1.8;
+  }
+
+  .pricing-note {
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    margin-bottom: 2rem;
+  }
+
+  .pricing-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 1.5rem;
+  }
+
+  .pricing-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+    margin-bottom: 2rem;
+  }
+
+  .pricing-features li {
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-weight: 300;
+  }
+
+  .check {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-size: 10px;
+  }
+
+  .pricing-btn {
+    display: block;
+    text-align: center;
+    padding: 0.875rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+    background: transparent;
+  }
+
+  .pricing-btn:hover { background: var(--accent); color: var(--white); }
+
+  .pricing-card.featured .pricing-btn {
+    background: var(--accent);
+    color: var(--white);
+  }
+
+  .pricing-card.featured .pricing-btn:hover { background: #1e4433; }
+
+  /* ── TESTIMONIALS ── */
+  #testimonials { background: var(--ink); }
+
+  #testimonials .section-eyebrow { color: var(--accent-mid); }
+  #testimonials .section-title { color: var(--white); }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 4rem;
+  }
+
+  .testimonial-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 2rem;
+  }
+
+  .testimonial-stars {
+    color: var(--gold);
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+  }
+
+  .testimonial-text {
+    font-size: 0.9375rem;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.75;
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+  }
+
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .author-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+
+  .author-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--white);
+  }
+
+  .author-role {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.45);
+  }
+
+  /* ── CTA BANNER ── */
+  #cta {
+    background: var(--accent);
+    padding: 6rem 8%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 3rem;
+  }
+
+  #cta h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 3vw, 2.75rem);
+    color: var(--white);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    max-width: 520px;
+  }
+
+  #cta h2 em { font-style: italic; opacity: 0.75; }
+
+  .cta-actions {
+    display: flex;
+    gap: 1rem;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+
+  .btn-white {
+    background: var(--white);
+    color: var(--accent);
+    padding: 0.9rem 2rem;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+
+  .btn-white:hover { background: var(--cream); }
+
+  .btn-outline-white {
+    background: transparent;
+    color: var(--white);
+    border: 1.5px solid rgba(255,255,255,0.5);
+    padding: 0.9rem 2rem;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+
+  .btn-outline-white:hover { border-color: var(--white); background: rgba(255,255,255,0.1); }
+
+  /* ── CONTACT ── */
+  #contact { background: var(--white); }
+
+  .contact-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .contact-info h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.75rem;
+    color: var(--ink);
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  .contact-info p {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    line-height: 1.75;
+    font-weight: 300;
+    margin-bottom: 2.5rem;
+  }
+
+  .contact-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .contact-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--accent-light);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .contact-icon svg { width: 16px; height: 16px; color: var(--accent); }
+
+  .contact-item-label { font-size: 0.75rem; color: var(--ink-faint); margin-bottom: 2px; }
+  .contact-item-value { font-size: 0.9rem; color: var(--ink); font-weight: 400; }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .form-group label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--ink-muted);
+    letter-spacing: 0.02em;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--accent);
+    background: var(--white);
+  }
+
+  .form-group textarea { min-height: 120px; resize: vertical; }
+
+  .form-submit {
+    background: var(--accent);
+    color: var(--white);
+    border: none;
+    padding: 0.9rem 2rem;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+    letter-spacing: 0.01em;
+  }
+
+  .form-submit:hover { background: #1e4433; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    padding: 4rem 8% 2.5rem;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 2rem;
+  }
+
+  .footer-brand .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.35rem;
+    color: var(--white);
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .footer-brand .logo span { color: var(--accent-mid); }
+
+  .footer-brand p {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.7;
+    font-weight: 300;
+    max-width: 220px;
+  }
+
+  .footer-col h4 {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 1.25rem;
+  }
+
+  .footer-col ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .footer-col ul li a {
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    transition: color 0.2s;
+    font-weight: 300;
+  }
+
+  .footer-col ul li a:hover { color: var(--white); }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-bottom p {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.3);
+  }
+
+  .footer-bottom a {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.3);
+    text-decoration: none;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-up { animation: fadeUp 0.6s ease forwards; }
+  .delay-1 { animation-delay: 0.1s; opacity: 0; }
+  .delay-2 { animation-delay: 0.2s; opacity: 0; }
+  .delay-3 { animation-delay: 0.3s; opacity: 0; }
+  .delay-4 { animation-delay: 0.45s; opacity: 0; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    #hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-right { height: 55vw; }
+    .hero-left { padding: 5rem 6% 4rem; }
+    .services-grid { grid-template-columns: 1fr 1fr; }
+    .process-layout { grid-template-columns: 1fr; }
+    .process-visual { position: relative; top: auto; height: 300px; }
+    .pricing-grid { grid-template-columns: 1fr; max-width: 460px; }
+    .contact-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 5%; }
+    .nav-links { display: none; }
+    section { padding: 5rem 5%; }
+    .stats-bar { grid-template-columns: 1fr 1fr; padding: 2rem 5%; }
+    .stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .stat:nth-child(2n) { border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .stat:nth-child(3), .stat:last-child { border-bottom: none; }
+    .services-header { flex-direction: column; align-items: flex-start; }
+    .services-grid { grid-template-columns: 1fr; }
+    .portfolio-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+    .portfolio-grid .item:first-child { grid-column: 1 / -1; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    #cta { flex-direction: column; align-items: flex-start; }
+    .form-row { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Visual<span>Spacious</span></a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#portfolio">Portfolio</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact" class="nav-cta">Book a Shoot</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow fade-up">Property Imaging Specialists</div>
+    <h1 class="hero-title fade-up delay-1">
+      Every property<br>deserves to be<br><em>truly seen.</em>
+    </h1>
+    <p class="hero-sub fade-up delay-2">
+      Matterport 3D walkthroughs and cinematic drone footage that help buyers connect with a property before they ever set foot inside.
+    </p>
+    <div class="hero-actions fade-up delay-3">
+      <a href="#contact" class="btn-primary">Book a Shoot</a>
+      <a href="#portfolio" class="btn-ghost">View our work</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="photo-grid">
+      <div class="top"></div>
+      <div class="bottom">
+        <div class="b1"></div>
+        <div class="b2"></div>
+      </div>
+    </div>
+    <div class="hero-badge fade-up delay-4">
+      <div class="badge-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" style="color: var(--accent)">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <div class="badge-text">
+        <p>Matterport Certified</p>
+        <strong>Service Provider</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat">
+    <div class="stat-num">600<span>+</span></div>
+    <div class="stat-label">Properties Captured</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">4.9<span>★</span></div>
+    <div class="stat-label">Average Rating</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">48<span>h</span></div>
+    <div class="stat-label">Delivery Turnaround</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">12<span>+</span></div>
+    <div class="stat-label">Years of Experience</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-header">
+    <div>
+      <span class="section-eyebrow">What We Offer</span>
+      <h2 class="section-title">Imaging services<br>built for real estate</h2>
+    </div>
+    <p class="section-sub" style="margin-bottom:0">
+      We specialise in two things and do them exceptionally well — immersive 3D tours and aerial cinematography.
+    </p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
+        </svg>
+      </div>
+      <h3>Matterport 3D Tours</h3>
+      <p>Full-property digital twins that let buyers explore every room in immersive 3D — from any device, any time.</p>
+      <ul class="service-features">
+        <li>360° interactive walkthrough</li>
+        <li>Floor plan generation</li>
+        <li>Shareable embed links</li>
+        <li>Dollhouse & floor-level views</li>
+        <li>Measurement tools included</li>
+      </ul>
+      <span class="service-tag">Most Requested</span>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+          <path d="M12 2a2 2 0 0 1 2 2v1h4a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-1l-1 8H8L7 9H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4V4a2 2 0 0 1 2-2z"/>
+          <path d="M5 9l-2 2M19 9l2 2M5 13l-2-2M19 13l2-2"/>
+        </svg>
+      </div>
+      <h3>Drone Aerial Photography</h3>
+      <p>Licensed drone operators capturing your property and its surroundings from perspectives that ground-level shots simply can't match.</p>
+      <ul class="service-features">
+        <li>High-resolution stills</li>
+        <li>4K cinematic video footage</li>
+        <li>Neighbourhood context shots</li>
+        <li>Twilight & golden hour options</li>
+        <li>Transport Canada RPAS certified</li>
+      </ul>
+      <span class="service-tag">Licensed & Insured</span>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+          <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+      </div>
+      <h3>Interior Photography</h3>
+      <p>Professionally lit, carefully composed stills that showcase architecture, finishes, and space in the most flattering light.</p>
+      <ul class="service-features">
+        <li>HDR-blended exposures</li>
+        <li>Virtual staging available</li>
+        <li>25–40 edited images per shoot</li>
+        <li>Web & print-ready exports</li>
+        <li>Same-day rush available</li>
+      </ul>
+      <span class="service-tag">Add-on Available</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="process-layout">
+    <div>
+      <span class="section-eyebrow">How It Works</span>
+      <h2 class="section-title">Simple from<br>start to delivery</h2>
+      <p class="section-sub" style="margin-bottom: 3rem">
+        We keep the process straightforward so you can focus on selling the property.
+      </p>
+      <div class="process-steps">
+        <div class="process-step">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <h4>Book online or call us</h4>
+            <p>Choose your services, pick a date that works, and share the property address. We handle the rest from there.</p>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <h4>We show up, fully equipped</h4>
+            <p>Our team arrives on time with Matterport camera, drone, and lighting gear — ready for a full shoot.</p>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <h4>Edit & quality check</h4>
+            <p>Every image is professionally colour-graded, and every 3D tour is reviewed for accuracy before it leaves our hands.</p>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">04</div>
+          <div class="step-content">
+            <h4>Delivered within 48 hours</h4>
+            <p>Files and embed links hit your inbox ready to publish — with the option to request revisions if anything needs adjusting.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="process-visual">
+      <div class="process-visual-overlay"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <div class="portfolio-header">
+    <div>
+      <span class="section-eyebrow">Our Work</span>
+      <h2 class="section-title">Recent shoots</h2>
+    </div>
+    <a href="#contact" class="btn-ghost">See full portfolio</a>
+  </div>
+  <div class="portfolio-grid">
+    <div class="item">
+      <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1100&q=80" alt="Modern home exterior with pool" loading="lazy" />
+      <div class="item-overlay"><span>Drone + Matterport · West Vancouver</span></div>
+    </div>
+    <div class="item">
+      <img src="https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=600&q=80" alt="Luxury interior living room" loading="lazy" />
+      <div class="item-overlay"><span>Matterport · South Surrey</span></div>
+    </div>
+    <div class="item">
+      <img src="https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=600&q=80" alt="Aerial property view" loading="lazy" />
+      <div class="item-overlay"><span>Drone · Langley</span></div>
+    </div>
+    <div class="item">
+      <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&q=80" alt="Modern home exterior" loading="lazy" />
+      <div class="item-overlay"><span>Interior + Drone · Burnaby</span></div>
+    </div>
+    <div class="item">
+      <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=600&q=80" alt="Kitchen interior" loading="lazy" />
+      <div class="item-overlay"><span>Interior · White Rock</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="pricing-header">
+    <span class="section-eyebrow">Transparent Pricing</span>
+    <h2 class="section-title">Straightforward packages</h2>
+    <p class="section-sub">No surprises. Choose what fits and we'll tailor it to your property size.</p>
+  </div>
+  <div class="pricing-grid">
+
+    <div class="pricing-card">
+      <div class="pricing-tier">Starter</div>
+      <div class="pricing-name">Matterport Only</div>
+      <div class="pricing-desc">Great for condos and smaller listings that need a compelling 3D walkthrough.</div>
+      <div class="pricing-price"><span class="currency">$</span><span class="amount">249</span></div>
+      <div class="pricing-note">per property, up to 2,000 sq ft</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li><span class="check">✓</span>Full Matterport 3D scan</li>
+        <li><span class="check">✓</span>Floor plan generation</li>
+        <li><span class="check">✓</span>Shareable & embeddable link</li>
+        <li><span class="check">✓</span>48-hour delivery</li>
+        <li><span class="check">✓</span>Hosted for 12 months</li>
+      </ul>
+      <a href="#contact" class="pricing-btn">Get started</a>
+    </div>
+
+    <div class="pricing-card featured">
+      <div class="featured-badge">Most Popular</div>
+      <div class="pricing-tier">Complete</div>
+      <div class="pricing-name">Matterport + Drone</div>
+      <div class="pricing-desc">The full package — a 3D interior tour paired with stunning aerial footage of the property.</div>
+      <div class="pricing-price"><span class="currency">$</span><span class="amount">549</span></div>
+      <div class="pricing-note">per property, up to 4,000 sq ft</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li><span class="check">✓</span>Everything in Starter</li>
+        <li><span class="check">✓</span>Licensed drone photography</li>
+        <li><span class="check">✓</span>4K aerial video (1 min edit)</li>
+        <li><span class="check">✓</span>15+ aerial stills</li>
+        <li><span class="check">✓</span>Social media formats included</li>
+        <li><span class="check">✓</span>Priority scheduling</li>
+      </ul>
+      <a href="#contact" class="pricing-btn">Book this package</a>
+    </div>
+
+    <div class="pricing-card">
+      <div class="pricing-tier">Premium</div>
+      <div class="pricing-name">Full Production</div>
+      <div class="pricing-desc">Maximum impact for luxury and large-format listings that demand premium presentation.</div>
+      <div class="pricing-price"><span class="currency">$</span><span class="amount">999</span></div>
+      <div class="pricing-note">per property, unlimited sq ft</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li><span class="check">✓</span>Everything in Complete</li>
+        <li><span class="check">✓</span>Professional interior photography</li>
+        <li><span class="check">✓</span>25–40 edited stills</li>
+        <li><span class="check">✓</span>Twilight shoot option</li>
+        <li><span class="check">✓</span>Virtual staging consultation</li>
+        <li><span class="check">✓</span>Same-day delivery option</li>
+      </ul>
+      <a href="#contact" class="pricing-btn">Get started</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <span class="section-eyebrow">Client Stories</span>
+  <h2 class="section-title">Trusted by agents<br>across the Lower Mainland</h2>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"The Matterport tour alone generated three serious inquiries within the first weekend. The quality is consistently exceptional and the team is incredibly easy to work with."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">SR</div>
+        <div>
+          <div class="author-name">Sarah Rourke</div>
+          <div class="author-role">Realtor, RE/MAX City Realty</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"I've used a lot of photographers and no one delivers like VisualSpacious. The drone footage is cinematic-level and the turnaround is always on time. My go-to for every listing."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">JL</div>
+        <div>
+          <div class="author-name">James Liu</div>
+          <div class="author-role">Team Lead, Sutton Group</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"The complete package was genuinely worth every dollar. Our luxury listing sold in 6 days at asking price — the 3D tour and drone video made the difference."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">MH</div>
+        <div>
+          <div class="author-name">Michelle Hartley</div>
+          <div class="author-role">Broker, Engel & Völkers</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<div id="cta">
+  <h2>Ready to show your listing<br><em>at its absolute best?</em></h2>
+  <div class="cta-actions">
+    <a href="#contact" class="btn-white">Book a Shoot</a>
+    <a href="tel:+16041234567" class="btn-outline-white">Call Us</a>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-layout">
+    <div class="contact-info">
+      <span class="section-eyebrow">Get in Touch</span>
+      <h3>Let's plan<br>your shoot</h3>
+      <p>Fill in the form and we'll get back to you within a few hours to confirm availability and walk through the details.</p>
+      <div class="contact-detail">
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.96-1.04a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.92 16.92z"/></svg>
+          </div>
+          <div>
+            <div class="contact-item-label">Phone</div>
+            <div class="contact-item-value">+1 (236) 833-5950</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <div class="contact-item-label">Email</div>
+            <div class="contact-item-value">support@visualspacious.com
+</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <div class="contact-item-label">Service Area</div>
+            <div class="contact-item-value">Metro Vancouver & Fraser Valley</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form class="contact-form" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Full name</label>
+          <input type="text" id="name" placeholder="Jane Smith" />
+        </div>
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input type="email" id="email" placeholder="jane@realty.ca" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="phone">Phone number</label>
+          <input type="tel" id="phone" placeholder="(236) 833-5950" />
+        </div>
+        <div class="form-group">
+          <label for="service">Service needed</label>
+          <select id="service">
+            <option value="">Select a package...</option>
+            <option>Matterport Only — $249</option>
+            <option>Matterport + Drone — $549</option>
+            <option>Full Production — $999</option>
+            <option>Custom / Not sure yet</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="address">Property address</label>
+        <input type="text" id="address" placeholder="123 Main St, Surrey, BC" />
+      </div>
+      <div class="form-group">
+        <label for="message">Additional notes</label>
+        <textarea id="message" placeholder="Preferred dates, property size, special requests..."></textarea>
+      </div>
+      <button type="submit" class="form-submit">Send Booking Request →</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <span class="logo">Visual<span>Spacious</span></span>
+      <p>Matterport 3D tours and drone photography for real estate professionals across Metro Vancouver.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#services">Matterport 3D Tours</a></li>
+        <li><a href="#services">Drone Photography</a></li>
+        <li><a href="#services">Interior Photography</a></li>
+        <li><a href="#pricing">Packages & Pricing</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#portfolio">Our Portfolio</a></li>
+        <li><a href="#process">How It Works</a></li>
+        <li><a href="#testimonials">Client Reviews</a></li>
+        <li><a href="#contact">Contact Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Service Areas</h4>
+      <ul>
+        <li><a href="#">Vancouver</a></li>
+        <li><a href="#">Surrey & White Rock</a></li>
+        <li><a href="#">Burnaby & Coquitlam</a></li>
+        <li><a href="#">Langley & Abbotsford</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 VisualSpacious. All rights reserved.</p>
+    <a href="#">Privacy Policy</a>
+  </div>
+</footer>
+
+<script>
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.form-submit');
+    btn.textContent = 'Request Sent ✓';
+    btn.style.background = '#1e4433';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.textContent = 'Send Booking Request →';
+      btn.style.background = '';
+      btn.disabled = false;
+      e.target.reset();
+    }, 3000);
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.service-card, .pricing-card, .testimonial-card, .process-step').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
